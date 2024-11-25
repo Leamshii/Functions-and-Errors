@@ -2,71 +2,54 @@
 A smart contract that implements the require(), assert() and revert() statements.
 
 
-This repository contains a simple Solidity smart contract called `smartcont.sol` which demonstrates the use of Solidity's built-in error handling functions: `require()`, `assert()`, and `revert()`. The contract implements basic token deposit, withdrawal, and transfer functions with these checks to ensure the correct behavior of the contract.
+This repository contains a simple Solidity smart contract called `BankATM.sol` which demonstrates the use of Solidity's built-in error handling functions: `require()`, `assert()`, and `revert()`. The contract implements basic token deposit, withdrawal, and transfer functions with these checks to ensure the correct behavior of the contract.
 
-## Table of Contents
+Features
+Deposit Funds: Increase the contract balance securely.
+Withdraw Funds: Withdraw funds if sufficient balance is available.
+Transfer Funds: Simulate transferring funds to a recipient's address.
+Error Handling: Implements require(), assert(), and revert() for robust state management and input validation.
+Event Logging: Captures deposits, withdrawals, and transfers for transparency.
 
-- [Overview](#overview)
-- [Contract Functions](#contract-functions)
-- [Prerequisites](#prerequisites)
-- [Testing the Contract](#testing-the-contract)
+Contract Details
+Constructor
+Initializes the contract with an initial balance.
+   Parameter:
+   initialBalance: The starting balance of the vault (must be non-negative).
 
-## Overview
 
-The `smartcont.sol` contract includes the following key features:
-- **Deposit**: Allows users to deposit funds into the contract, with a check to ensure the deposit amount is greater than 0 using `require()`.
-- **Withdraw**: Allows users to withdraw funds, with an internal state check using `assert()` to ensure the contract's balance remains correct.
-- **Transfer**: Allows a user to transfer funds to a recipient, with an explicit check using `revert()` when there are insufficient funds.
+Public Functions
+depositFunds
+Allows users to deposit funds into the vault.
+   Parameter:
+      amount: The amount to deposit (must be greater than 0).
+   Events: Emits DepositMade with details of the transaction.
 
-## Contract Functions
+   
+withdrawFunds
+Allows users to withdraw funds from the vault.
+   Parameter:
+      amount: The amount to withdraw (must be greater than 0 and less than or equal to the balance).
+   Events: Emits WithdrawalMade with details of the transaction.
 
-1. **deposit(int256 amount)**:  
-   - Takes an amount to deposit into the contract.  
-   - Uses `require()` to ensure the deposit amount is greater than 0.  
-   - If the condition fails, the transaction is reverted with the error message `"Deposit amount must be greater than 0"`.
 
-2. **withdraw(int256 amount)**:  
-   - Allows users to withdraw a specified amount.  
-   - Uses `assert()` to check that the balance is sufficient for withdrawal.
-   - If the balance is insufficient, the `assert()` fails and the transaction is reverted, indicating an internal consistency error.
+transferFunds
+Simulates transferring funds to another account.
+   Parameters:
+      recipient: The address of the recipient (must be valid).
+      amount: The amount to transfer (must be greater than 0 and less than or equal to the balance).
+   Events: Emits TransferMade with details of the transaction.
 
-3. **transfer(address recipient, int256 amount)**:  
-   - Transfers a specified amount to a recipient.  
-   - Uses `revert()` to revert the transaction with the message `"Insufficient funds for transfer"` if the balance is insufficient.
 
-## Prerequisites
+viewVaultBalance
+Fetches the current balance of the vault.
+   Returns:
+      The current vault balance.
 
-To run this contract, you need the following tools installed:
 
-- **Solidity**: The smart contract is written in Solidity (version 0.8.0 or higher).
-- **Remix IDE** or **HardHat** for deploying and testing the contract.
 
-## Testing the Contract
-
-After deploying the contract, you can interact with it by calling the following functions:
-
-1. **Deposit**:  
-   Call the `deposit(int256 amount)` function with a valid amount to deposit.  
-   - If you try to deposit a value less than or equal to 0, it will trigger a `require()` failure with the message `"Deposit amount must be greater than 0"`.
-
-2. **Withdraw**:  
-   Call the `withdraw(int256 amount)` function with a valid amount to withdraw.  
-   - If the withdrawal amount exceeds the balance, it will trigger an `assert()` failure and revert the transaction due to an internal consistency error.
-
-3. **Transfer**:  
-   Call the `transfer(address recipient, int256 amount)` function to transfer funds.  
-   - If the contract balance is less than the transfer amount, it will revert the transaction with the message `"Insufficient funds for transfer"`.
-
-### Example:
-
-To test the contract in **Remix**, follow these steps:
-
-1. **Deploy the Contract**:  
-   Deploy the contract using Remix's "Deploy & Run Transactions" plugin.
-
-2. **Call Functions**:  
-   - **Deposit**: Call the `deposit(100)` function to deposit 100 tokens into the contract.
-   - **Withdraw**: Call `withdraw(50)` to withdraw 50 tokens.
-   - **Transfer**: Call `transfer(0xRecipientAddress, 25)` to transfer 25 tokens.
-
-   If you attempt to deposit 0 or withdraw more than the available balance, the contract will revert the transaction with an appropriate error message.
+Events
+DepositMade(address indexed by, int256 amount, int256 newBalance)
+WithdrawalMade(address indexed by, int256 amount, int256 newBalance)
+TransferMade(address indexed from, address indexed to, int256 amount, int256 newBalance)
+These events provide transparency by logging every transaction.
